@@ -1,0 +1,36 @@
+<main class="main page-container container-fluid">
+    <div class="title">Главная</div>
+    <section class="interval-selector row m-0 px-0 gy-3">
+        <button type="button" class="interval-btn btn btn-outline-secondary active" id="intToday">Сегодня</button>
+        <button type="button" class="interval-btn btn btn-outline-secondary" id="intWeek">Неделя</button>
+        <button type="button" class="interval-btn btn btn-outline-secondary" id="intMonth">Месяц</button>
+        <button type="button" class="interval-btn btn btn-outline-secondary" id="intYear">Год</button>
+        <button type="button" class="interval-btn btn btn-outline-secondary" id="intAll">Все</button>
+
+        <div class="set-interval-section d-flex  p-0">
+
+            <button type="button" class="interval-btn btn btn-outline-secondary" id="SetInterval">Интервал</button>
+            <div class="date-separation">с</div>
+            <button type="button" class="date-set-btn btn btn-link me-3" id="fromDate">Дата</button>
+            <div class="date-separation" id="till">по</div>
+            <button type="button" class="date-set-btn btn btn-link" id="tillDate">Дата</button>
+        </div>
+
+
+    </section>
+
+    <section class="chars" >
+        <div class="chart">
+            <div class="chart-title">Доходы</div>
+            <canvas id="incomesChart" ></canvas>
+        </div>
+        <div class="separator"></div>
+        <div class="chart">
+            <div class="chart-title">Расходы</div>
+            <canvas id="spenceChart" ></canvas>
+        </div>
+
+    </section>
+
+
+</main>

@@ -1,0 +1,33 @@
+<main class="expenses page-container container-fluid position-relative">
+    <div  id="deleteWindow" class="modal-window position-absolute z-2 top-50 start-50 translate-middle">
+        <p class="pb-3 mb-1">Вы действительно хотите удалить категорию?</p>
+        <button type="button" class="btn btn-success" id="confirmDeleting">Да, удалить</button>
+        <button type="button" class="btn btn-danger" id="cancelDeleting">Не удалять</button>
+
+
+    </div>
+
+    <div class="title" id="balanceCategoryTitle"></div>
+    <div class="information">
+        <div class="row gy-3" id="categoryList" >
+
+
+
+            <div class="col-lg-4 col-md-6 col-12" id="emptyCard">
+                <div class="card position-relative">
+                    <a class="plus position-absolute top-50 start-50 translate-middle" id="addCategoryButton" href="javascript:void(0)">+</a>
+                    <div class="card-body createNew">
+                        <h5 class="card-title">Empty</h5>
+                        <a href="javascript:void(0)" class="btn btn-primary">Редактировать</a>
+                        <a href="javascript:void(0)" class="btn btn-danger">Удалить</a>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+
+
+</main>

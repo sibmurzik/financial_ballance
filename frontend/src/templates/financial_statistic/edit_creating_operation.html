@@ -1,0 +1,48 @@
+<main class="financial-operation page-container container-fluid position-relative">
+
+
+    <div class="title" id="editCreatingOperationTitle"></div>
+    <form class="information">
+        <div class="mb-2 pb-1">
+            <select class="form-select form-control" id="typeSelect">
+                <option value="empty" selected class="label">Тип...</option>
+                <option value="income">Доход</option>
+                <option value="expense">Расход</option>
+            </select>
+            <div class="invalid-feedback mb-2 fw-normal" id="typeFeedback">
+                Тип не задан
+            </div>
+        </div>
+        <div class="mb-2 pb-1">
+            <select class="form-select form-control" id="categorySelect">
+                <option value="empty" selected class="label">Категория...</option>
+            </select>
+            <div class="invalid-feedback mb-2 fw-normal" id="categoryFeedback">
+                Категория не задана
+            </div>
+        </div>
+        <div class="mb-2 pb-1">
+            <input type="text" class="form-control" id="amountInput" placeholder="Сумма в $...">
+            <div class="invalid-feedback mb-2 fw-normal" id="amountFeedback">
+                Cумма должна быть задана в цифрах
+            </div>
+        </div>
+        <div class="mb-2 pb-1">
+            <input  type="text" class="form-control" id="dateInput" placeholder="Дата...">
+            <div class="invalid-feedback mb-2 fw-normal" id="dateFeedback">
+                Дата должна быть в формате дд.мм.гггг
+
+            </div>
+        </div>
+        <div class="mb-3 pb-1">
+            <input type="text" class="form-control" id="commentsInput" placeholder="Комментарий...">
+            <div class="invalid-feedback mb-2 fw-normal" id="commentsFeedback">
+            </div>
+        </div>
+        <button type="button" class="btn btn-success" id="confirmEditCreating">Создать</button>
+        <button type="button" class="btn btn-danger" id="cancel">Отмена</button>
+
+    </form>
+
+
+</main>

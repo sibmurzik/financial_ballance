@@ -1,0 +1,126 @@
+/*Main page*/
+
+@use "adaptive";
+
+.interval-selector {
+  padding-top: 45px;
+  padding-bottom: 134px;
+
+  letter-spacing: 0.03em;
+  @include adaptive.sm {
+    padding-top: 30px;
+    padding-bottom: 60px;
+  }
+
+  .interval-btn {
+    font-weight: 500 !important;
+    font-size: 16px;
+    letter-spacing: 0.03em;
+    width: 100px;
+    height: 37px;
+    margin-right: 20px;
+    @include adaptive.sm {
+      font-size: 14px;
+
+    }
+
+  }
+
+  .interval-btn:active {
+    color: #fff;
+    background: #6c757d;
+  }
+
+  .set-interval-section {
+    width: 288px;
+    @include adaptive.sm {
+      width: auto;
+    }
+
+    .date-set-btn {
+      width: 62px;
+      height: 37px;
+      font-weight: 500;
+      font-size: 16px;
+      letter-spacing: 0.03em;
+      text-decoration: underline;
+      text-decoration-skip-ink: none;
+      color: #6c757d;
+      @include adaptive.sm {
+        font-size: 14px;
+      }
+
+    }
+
+    .date-separation {
+      width: 9px;
+      line-height: 37px;
+      font-size: 16px;
+      padding-right: 4px;
+      padding-left: 0;
+      @include adaptive.sm {
+        font-size: 14px;
+      }
+
+    }
+
+    #till {
+      width: 19px;
+    }
+
+
+  }
+
+
+}
+
+
+.chars {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-right: 94px;
+  padding-bottom: 128px;
+
+  @include adaptive.md {
+    flex-direction: column;
+    justify-content: center;
+    gap: 20px;
+    padding-right: 0;
+    padding-bottom: 0;
+
+  }
+
+  .separator {
+    width: 1px;
+    border-left: 1px solid #d9d9d9;
+    height: 450px;
+    flex-shrink: 1;
+    align-self: flex-end;
+    @include adaptive.md {
+      display: none;
+
+    }
+  }
+}
+
+.chart {
+  max-width: 437px !important;
+  flex-grow: 1;
+  @include adaptive.md650 {
+    width: 350px !important;
+  }
+  @include adaptive.sm {
+    max-width: 270px !important;
+  }
+
+  .chart-title {
+    font-size: 28px;
+    color: #290661;
+    text-align: center;
+    line-height: 100%;
+    padding-bottom: 25px;
+
+  }
+}
+

@@ -1,0 +1,444 @@
+@use "adaptive";
+@use "main_page";
+@use "incomes_and_spenses_page";
+
+$border-style: 1px solid #6C757D;
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+@font-face {
+  font-family: "Roboto";
+  font-weight: normal;
+  src: url("../static/fonts/Roboto-Regular.ttf");
+}
+
+@font-face {
+  font-family: "Roboto";
+  font-weight: 500;
+  src: url("../static/fonts/Roboto-Medium.ttf");
+}
+
+@font-face {
+  font-family: "Roboto";
+  font-weight: bold;
+  src: url("../static/fonts/Roboto-Bold.ttf");
+}
+
+html {
+  height: 100%;
+}
+
+body {
+  font-family: "Roboto", sans-serif;
+  font-weight: 500;
+  background: #fff;
+  height: 100%;
+  color: #000;
+  /*background: rgba(0, 0, 0, 0.45);*/
+
+}
+
+.app-container {
+  max-width: 1440px;
+  margin: 0 auto;
+  padding: 0;
+}
+
+.page-container {
+  padding-left: 60px;
+  padding-top: 100px;
+  @include adaptive.md {
+    padding: 50px 10px 0 10px;
+  }
+
+}
+
+.title {
+  font-size: 40px;
+  line-height: 40px;
+  color: #052c65;
+  @include adaptive.md {
+    padding-top: 30px;
+    text-align: center;
+  }
+  @include adaptive.sm {
+    font-size: 30px;
+
+  }
+}
+
+.logo-box {
+  padding-bottom: 60px;
+  width: 171px;
+
+
+}
+
+.login-register-page {
+  width: 397px;
+
+  @include adaptive.sm {
+    min-width: 85%;
+
+  }
+
+
+}
+
+
+.login-register-form {
+
+  .input-group-text {
+    background-color: #e9ecef;
+  }
+
+  .form-control {
+    font-size: 15px;
+    line-height: 160%;
+  }
+
+  .form-control::placeholder {
+    font-weight: normal;
+    font-size: 15px;
+    line-height: 160%;
+    color: #6c757d;
+  }
+
+  .form-check-label {
+    font-weight: normal;
+    font-size: 12px;
+    line-height: 14px;
+    color: #000;
+  }
+
+  .btn {
+    font-size: 15px;
+    height: 38px;
+    border-radius: 5px;
+
+  }
+
+  .form-link {
+    font-size: 12px;
+    line-height: 140%;
+    font-weight: normal;
+    padding-top: 10px;
+  }
+
+
+}
+
+.main-container {
+  display: flex;
+  flex-direction: row;
+  min-height: 100vh;
+  @include adaptive.md {
+    flex-direction: column;
+
+  }
+
+}
+
+.main-app {
+  flex-grow: 1;
+}
+
+.sidebar {
+
+  width: 219px;
+  min-height: 100%;
+  border: $border-style;
+  color: #052c65;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  @include adaptive.md {
+    width: 100%;
+    min-height: 60px;
+    justify-content: space-between;
+    flex-direction: row;
+    padding-right: 20px;
+    padding-left: 30px;
+  }
+  @include adaptive.sm {
+    min-height: 60px;
+  }
+
+  .logo-section {
+    border-bottom: $border-style;
+    height: 101px;
+
+    @include adaptive.md {
+      border: none;
+      height: auto;
+    }
+
+    .side-logo-box {
+      width: 98px;
+      height: 40px;
+    }
+
+
+  }
+
+  .navigation-section {
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    flex-grow: 1;
+    @include adaptive.md {
+      flex-grow: 0;
+
+    }
+
+
+    .side-menu {
+      margin-top: 60px;
+      @include adaptive.md {
+        position: absolute;
+        top: 5px;
+        right: 0;
+        display: flex;
+        justify-content: space-around;
+        padding-left: 10px;
+        gap: 10px;
+        width: 100%;
+        padding-bottom: 5px;
+        border-bottom: $border-style;
+
+      }
+
+      .navigation-section-button {
+        background: transparent;
+        width: 178px;
+        height: 40px;
+        border: none;
+        border-radius: 5px;
+        display: flex;
+        align-items: center;
+        justify-content: start;
+        gap: 10px;
+        padding-left: 16px;
+        font-weight: normal;
+        font-size: 14px;
+        line-height: 14px;
+        color: #052c65;
+
+        text-decoration: none;
+        @include  adaptive.md {
+          width: auto;
+          padding: 0 10px;
+        }
+        @include adaptive.sm {
+          padding-left: 10px;
+          padding-right: 10px;
+          justify-content: center;
+          gap: 0;
+          font-size: 12px;
+          line-height: 12px;
+        }
+
+        .menuPicture {
+          @include adaptive.sm {
+            display: none;
+          }
+
+        }
+
+
+        svg {
+          fill: #052c65;
+
+        }
+
+
+
+      }
+
+      .navigation-section-button.active {
+        background-color: #0d6efd;
+        color: #fff;
+
+        svg {
+          fill: #fff;
+        }
+      }
+
+      .dropdownNavigationSection {
+        @include adaptive.md {
+
+          position: relative;
+
+        }
+        .navigation-section-button.dropdown-toggle-button {
+          @include adaptive.md {
+            justify-content: center!important;
+            gap: 10px;
+            width: auto;
+          }
+          @include adaptive.sm {
+            gap: 5px;
+            min-width: 105px;
+          }
+        }
+        .dropdown-list {
+          display: none;
+          flex-direction: column;
+          list-style: none;
+          padding-left: 0;
+          @include adaptive.md {
+            width: 100%;
+            z-index: 2;
+            position: absolute;
+            border: 1px solid #0d6efd;
+
+
+          }
+
+
+
+          .navigation-section-button.dropdown-button {
+            text-decoration: none;
+            border-radius: 0;
+            color: #0d6efd;
+            font-size: 14px;
+            font-weight: normal;
+            @include adaptive.sm {
+              font-size: 12px;
+
+
+            }
+
+
+
+
+            .collapsed {
+              display: block;
+            }
+
+            .non-collapsed {
+              display: none;
+            }
+
+          }
+
+        }
+
+        .navigation-section-button.dropdown-button.active {
+          background-color: #0d6efd;
+          color: #fff;
+        }
+      }
+
+
+      .dropdownNavigationSection.active {
+        border: 2px solid #0d6efd;
+        border-radius: 5px;
+
+
+
+        .navigation-section-button.dropdown-toggle-button {
+          color: #fff;
+          background-color: #0d6efd;
+          border-radius: 0 5px 0 0;
+
+
+          .collapsed {
+            display: none;
+          }
+
+          .non-collapsed {
+            display: block;
+          }
+
+        }
+
+        .dropdown-list {
+          display: flex;
+        }
+
+      }
+    }
+
+    .balance-info {
+      padding-left: 20px;
+      margin-bottom: 12px;
+      font-size: 14px;
+      width: 100%;
+      @include adaptive.md {
+        position: absolute;
+        padding: 0;
+        margin: 0;
+        width: auto;
+        top: 40px;
+        right: 20px;
+      }
+
+      span {
+        padding-left: 10px;
+        color: #0d6efd;
+      }
+
+    }
+  }
+
+  .user-info-section {
+    height: 96px;
+    border-top: $border-style;
+    cursor: pointer;
+
+
+
+    @include adaptive.md {
+      border: none;
+      height: auto;
+      display: flex;
+      align-items: center;
+
+    }
+
+    .user-info {
+      height: 36px;
+      margin: 20px 0 40px 20px;
+      @include adaptive.md {
+        margin: 0;
+
+      }
+
+
+      .user-info-picture {
+        width: 36px;
+        height: 36px;
+        border-radius: 100%;
+        background-color: #d9d9d9;
+        margin-right: 16px;
+        @include adaptive.sm {
+          width: 25px;
+          height: 25px;
+        }
+      }
+
+      .user-info-name {
+        font-weight: normal;
+        font-size: 14px;
+        line-height: 171%;
+        color: #052c65;
+
+
+      }
+
+    }
+  }
+
+}
+
+
+
+
+
