@@ -1,15 +1,20 @@
 import Chart from 'chart.js/auto';
 import {sideMenu} from "./sideMenu";
-
-
-
-
+import {HttpUtils} from "../utils/http-utils";
 
 export class Main {
-    constructor(sideMenuInstance) {
+    constructor(sideMenuInstance, openNewRoute) {
+        this.openNewRoute = openNewRoute;
+        if (!HttpUtils.checkAuthentification()) {
+            this.openNewRoute("/login")
+        }
+
+
 
         if (sideMenuInstance) {
             sideMenuInstance.paintActiveElement("mainPage");
+            sideMenuInstance.updateUserBallance().then();
+            sideMenuInstance.updateUserName();
         }
 
         this.incomesData = {

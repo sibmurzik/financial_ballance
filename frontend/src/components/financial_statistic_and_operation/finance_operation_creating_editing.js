@@ -2,13 +2,19 @@ import {FormValidation} from "../../utils/formValidation";
 import {Incomes} from "../incomes/incomes";
 import {Categories} from "../../utils/getAllCategories";
 import {allFinancialData} from "../../utils/getAllFinancialData";
+import {HttpUtils} from "../../utils/http-utils";
 
 export class FinancialOperationCreateEdit {
     constructor(sideMenuInstance, openNewRoute, operationType) {
         this.openNewRoute = openNewRoute;
+        if (!HttpUtils.checkAuthentification()) {
+            this.openNewRoute("/login")
+        }
 
         if (sideMenuInstance) {
             sideMenuInstance.paintActiveElement(operationType.split('-')[1] + "Page");
+            sideMenuInstance.updateUserBallance().then();
+            sideMenuInstance.updateUserName();
         }
         this.backRoute = '/financial';
         this.pageTitle = document.getElementById("editCreatingOperationTitle");

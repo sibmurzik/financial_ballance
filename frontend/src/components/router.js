@@ -23,7 +23,7 @@ export class Router {
                 title: 'Главная',
                 filePathTemplate: '/templates/main.html',
                 load: () => {
-                    new Main(this.sideMenuInstance);
+                    new Main(this.sideMenuInstance, this.openNewRoute.bind(this));
 
 
                 },

@@ -1,3 +1,5 @@
+import {HttpUtils} from "../utils/http-utils";
+
 export class sideMenu {
 
     constructor() {
@@ -7,6 +9,39 @@ export class sideMenu {
         this.incomeButton = document.getElementById('incomeButton');
         this.spenceButton = document.getElementById('spenceButton');
         this.dropdownNavigationSection = document.getElementById('dropdownNavigationSection');
+
+        this.totalBalance = document.getElementById('totalBalance');
+        this.userName = document.getElementById('userName');
+        this.burgerMenu = document.getElementById('burgerMenu');
+        this.sideMenu = document.getElementById('sideMenu');
+        this.closeMenuButton = document.getElementById('closeButton');
+        this.burgerMenu.addEventListener("click", (event)=> {
+            this.sideMenu.style = 'display:flex';
+            event.target.style = 'display:none';
+            document.body.style.background = "rgba(0, 0, 0, 0.45)";
+            this.closeMenuButton.style.display = "block";
+
+        });
+
+        this.closeMenuButton.addEventListener("click", (event)=> {
+            this.sideMenu.style = 'display:none';
+            document.body.style.background = "white";
+            this.burgerMenu.style.display = "block";
+
+        })
+
+        window.matchMedia("(max-width: 768px)")
+            .addEventListener('change', (event)=> {
+                if( screen.width > 768) {
+                    this.burgerMenu.style.display = "none";
+                    this.sideMenu.style = "display:block";
+                    this.closeMenuButton.style.display = "none";
+                    document.body.style.background = "white";
+                } else {
+                    this.burgerMenu.style.display = "block";
+                    this.sideMenu.style = "display:none";
+                }
+            });
 
         this.navElements = [
             this.mainPageButton,
@@ -55,6 +90,21 @@ export class sideMenu {
             case 'financialPage':
                 this.incomeAndExpensesButton.classList.add('active');
 
+        }
+    }
+
+    async updateUserBallance() {
+        let result = await HttpUtils.request("GET", "/balance", true);
+        if (result.error && result.message === "jwt expired") {}
+        else if(result.balance >= 0) {
+            this.totalBalance.innerText = result.balance + "$";
+        }
+    }
+
+    updateUserName() {
+        const userInfo = JSON.parse(sessionStorage.getItem("lumicoinData"));
+        if (userInfo && userInfo.name && userInfo.lastName) {
+            this.userName.innerText = userInfo.name + " " + userInfo.lastName;
         }
     }
 

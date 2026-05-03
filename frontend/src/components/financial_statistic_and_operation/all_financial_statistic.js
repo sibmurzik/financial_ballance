@@ -1,12 +1,18 @@
 import {allFinancialData} from "../../utils/getAllFinancialData";
+import {HttpUtils} from "../../utils/http-utils";
 
 
 export class AllFinancialStatistic {
 
     constructor(sideMenuInstance, openNewRoute) {
         this.openNewRoute = openNewRoute;
+        if (!HttpUtils.checkAuthentification()) {
+            this.openNewRoute("/login")
+        }
         if (sideMenuInstance) {
             sideMenuInstance.paintActiveElement("financialPage");
+            sideMenuInstance.updateUserBallance().then();
+            sideMenuInstance.updateUserName();
         }
 
         this.financialTable = document.getElementById("financial_statistic_table");

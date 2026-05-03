@@ -4,13 +4,6 @@
 
 
 
-.income, .expenses {
-  @include adaptive.md {
-    padding-top: 100px !important;
-
-  }
-}
-
 
 .modal-window {
   display: none;
@@ -23,6 +16,7 @@
   text-align: center;
   color: #290661;
   padding: 40px;
+  z-index: 6;
   @include adaptive.sm {
     font-size: 14px;
   }

@@ -2,7 +2,7 @@
 @use "main_page";
 @use "incomes_and_spenses_page";
 
-$border-style: 1px solid #6C757D;
+$border-style: 1px solid #D9D9D9;
 
 * {
   box-sizing: border-box;
@@ -44,7 +44,7 @@ body {
 
 .app-container {
   max-width: 1440px;
-  margin: 0 auto;
+  margin: 0;
   padding: 0;
 }
 
@@ -52,7 +52,7 @@ body {
   padding-left: 60px;
   padding-top: 100px;
   @include adaptive.md {
-    padding: 50px 10px 0 10px;
+    padding: 10px 10px 0 10px;
   }
 
 }
@@ -71,10 +71,20 @@ body {
   }
 }
 
+.burger-menu {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  cursor: pointer;
+  display: none;
+  @include adaptive.md {
+    display: block;
+  }
+}
+
 .logo-box {
   padding-bottom: 60px;
   width: 171px;
-
 
 }
 
@@ -149,7 +159,7 @@ body {
 
 .sidebar {
 
-  width: 219px;
+  min-width: 219px;
   min-height: 100%;
   border: $border-style;
   color: #052c65;
@@ -158,14 +168,8 @@ body {
   justify-content: space-between;
   @include adaptive.md {
     width: 100%;
-    min-height: 60px;
-    justify-content: space-between;
-    flex-direction: row;
     padding-right: 20px;
     padding-left: 30px;
-  }
-  @include adaptive.sm {
-    min-height: 60px;
   }
 
   .logo-section {
@@ -192,31 +196,45 @@ body {
     align-items: center;
     justify-content: space-between;
     flex-grow: 1;
+    margin-right: 20px;
+    margin-left: 20px;
     @include adaptive.md {
       flex-grow: 0;
+      margin: 0;
+      padding-top: 20px;
 
     }
 
 
     .side-menu {
       margin-top: 60px;
+      width: 100%;
       @include adaptive.md {
         position: absolute;
-        top: 5px;
-        right: 0;
-        display: flex;
-        justify-content: space-around;
-        padding-left: 10px;
-        gap: 10px;
-        width: 100%;
-        padding-bottom: 5px;
-        border-bottom: $border-style;
+        width: 50%;
+        top: 50%;
+        right: 50%;
+        display: none;
+        z-index: 999;
+        background-color: white;
+        flex-direction: column;
+        justify-content:center;
+        align-items: center;
+        transform: translate(50%, -50%);
+        gap: 5px;
+      }
+
+      .close-button {
+        align-self: flex-end;
+        padding-top: 10px;
+        padding-right: 10px;
+        display: none;
 
       }
 
       .navigation-section-button {
         background: transparent;
-        width: 178px;
+        width: 100%;
         height: 40px;
         border: none;
         border-radius: 5px;
@@ -232,7 +250,7 @@ body {
 
         text-decoration: none;
         @include  adaptive.md {
-          width: auto;
+          width: 100%;
           padding: 0 10px;
         }
         @include adaptive.sm {
@@ -271,34 +289,17 @@ body {
       }
 
       .dropdownNavigationSection {
+
         @include adaptive.md {
-
-          position: relative;
+           width: 100%;
 
         }
-        .navigation-section-button.dropdown-toggle-button {
-          @include adaptive.md {
-            justify-content: center!important;
-            gap: 10px;
-            width: auto;
-          }
-          @include adaptive.sm {
-            gap: 5px;
-            min-width: 105px;
-          }
-        }
+
         .dropdown-list {
           display: none;
           flex-direction: column;
           list-style: none;
           padding-left: 0;
-          @include adaptive.md {
-            width: 100%;
-            z-index: 2;
-            position: absolute;
-            border: 1px solid #0d6efd;
-
-
           }
 
 
@@ -343,6 +344,7 @@ body {
 
 
 
+
         .navigation-section-button.dropdown-toggle-button {
           color: #fff;
           background-color: #0d6efd;
@@ -371,18 +373,15 @@ body {
       margin-bottom: 12px;
       font-size: 14px;
       width: 100%;
-      @include adaptive.md {
-        position: absolute;
-        padding: 0;
-        margin: 0;
-        width: auto;
-        top: 40px;
-        right: 20px;
-      }
+
 
       span {
         padding-left: 10px;
         color: #0d6efd;
+      }
+
+      @include adaptive.md {
+        padding: 0;
       }
 
     }
@@ -400,6 +399,7 @@ body {
       height: auto;
       display: flex;
       align-items: center;
+      justify-content: start;
 
     }
 
@@ -408,6 +408,7 @@ body {
       margin: 20px 0 40px 20px;
       @include adaptive.md {
         margin: 0;
+        padding-bottom: 10px;
 
       }
 
@@ -436,7 +437,7 @@ body {
     }
   }
 
-}
+
 
 
 

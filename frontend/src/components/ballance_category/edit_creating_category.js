@@ -1,11 +1,17 @@
 import {FormValidation} from "../../utils/formValidation";
+import {HttpUtils} from "../../utils/http-utils";
 
 export class CategoryEditCreating {
     constructor(sideMenuInstance, openNewRoute, categoryType) {
         this.openNewRoute = openNewRoute;
+        if (!HttpUtils.checkAuthentification()) {
+            this.openNewRoute("/login")
+        }
 
         if (sideMenuInstance) {
             sideMenuInstance.paintActiveElement(categoryType.split('-')[1] + "Page");
+            sideMenuInstance.updateUserBallance().then();
+            sideMenuInstance.updateUserName();
         }
 
         this.backRoute = '/' + categoryType.split('-')[1];
