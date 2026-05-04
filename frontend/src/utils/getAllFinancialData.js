@@ -25,6 +25,8 @@ export class allFinancialData {
         },
     ]
 
+
+
     static getAllFinancialData() {
         return this.financialData;
     }
@@ -32,5 +34,14 @@ export class allFinancialData {
     static getFinancialDataById(id) {
         return this.financialData.find(item => item.id === id);
     }
+
+    static sortOperationsByCategory(type) {
+
+    }
+
+    static updateFinancialData(data) {
+
+    }
+
 
 }

@@ -17,6 +17,8 @@ export class Main {
             sideMenuInstance.updateUserName();
         }
 
+        this.gettingUserOperation().then();
+
         this.incomesData = {
             labels: [
                 'Red',
@@ -149,6 +151,16 @@ export class Main {
         this.incomeChart.update();
         this.spenceChart.update();
 
+    }
+
+    async gettingUserOperation() {
+
+        let result = await HttpUtils.request("GET", "/operations?period=all", true);
+        if (result.error && result.message === "jwt expired") {
+            await HttpUtils.refreshToken();
+            result = await HttpUtils.request("GET", "/operations?period=all", true);
+        }
+        console.log(result)
     }
 
 

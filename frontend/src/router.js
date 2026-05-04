@@ -1,12 +1,12 @@
-import {Login} from "./login";
-import {Signup} from "./signup";
-import {Main} from "./main";
-import {sideMenu} from "./sideMenu";
-import {Incomes} from "./incomes/incomes";
-import {Expenses} from "./expences/expenses";
-import {CategoryEditCreating} from "./ballance_category/edit_creating_category";
-import {AllFinancialStatistic} from "./financial_statistic_and_operation/all_financial_statistic";
-import {FinancialOperationCreateEdit} from "./financial_statistic_and_operation/finance_operation_creating_editing";
+import {Login} from "./components/login";
+import {Signup} from "./components/signup";
+import {Main} from "./components/main";
+import {sideMenu} from "./components/sideMenu";
+import {Incomes} from "./components/incomes/incomes";
+import {Expenses} from "./components/expences/expenses";
+import {CategoryEditCreating} from "./components/ballance_category/edit_creating_category";
+import {AllFinancialStatistic} from "./components/financial_statistic_and_operation/all_financial_statistic";
+import {FinancialOperationCreateEdit} from "./components/financial_statistic_and_operation/finance_operation_creating_editing";
 
 export class Router {
     constructor() {

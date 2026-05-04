@@ -56,6 +56,10 @@ export class sideMenu {
             this.dropdownNavigationSection.classList.toggle('active');
         })
 
+        document.getElementById('logoutButton').addEventListener('click', (event)=> {
+            sessionStorage.clear();
+        })
+
 
 
 

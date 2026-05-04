@@ -24,12 +24,6 @@ export class HttpUtils {
         }
 
 
-        const result = {
-            error : null,
-            response : null,
-
-        }
-
         // 1234Dyma$
 
         return  fetch(config.api + url, params)
@@ -58,5 +52,20 @@ export class HttpUtils {
             return userInfo.accessToken;
         }
         return null;
+    }
+
+    static async  refreshToken() {
+        const body = {
+            "refreshToken": JSON.parse(sessionStorage.getItem("lumicoinData")).refreshToken
+        }
+
+        return this.request("POST", "/refresh", false, body).then(res => {
+            let userData = JSON.parse(sessionStorage.getItem("lumicoinData"));
+            userData.accessToken = res.tokens.accessToken;
+            userData.refreshToken = res.tokens.refreshToken;
+            sessionStorage.setItem("lumicoinData", JSON.stringify(userData));
+            return res.json();
+
+        }).catch(err => err);
     }
 }

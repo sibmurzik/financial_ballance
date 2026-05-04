@@ -1,6 +1,7 @@
 
 import "./styles/styles.scss";
-import {Router} from "./components/router";
+import {Router} from "./router";
+
 
 class App {
     constructor() {
