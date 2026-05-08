@@ -70,7 +70,7 @@ export class Login {
 
         }
         if (isValidated) {
-            let result = await HttpUtils.request("POST", "/login", false, body);
+            let result = await HttpUtils.request("POST", "/login", body);
 
             if (result.tokens  && result.user) {
                 //console.log("enering to system");

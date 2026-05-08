@@ -1,31 +1,7 @@
+import {HttpUtils} from "./http-utils";
+
 export class allFinancialData {
-    static financialData = [
-        {
-            id: 1,
-            type: 'доход',
-            category: 'зарплата',
-            amount: 500,
-            date: new Date('2022-09-11'),
-            comments: "",
-            deleteButton: null,
-            editButton: null,
-
-        },
-
-        {
-            id: 2,
-            type: 'расход',
-            category: 'жильё',
-            amount: 2500,
-            date: new Date('2022-09-12'),
-            comments: "",
-            deleteButton: null,
-            editButton: null,
-
-        },
-    ]
-
-
+    static financialData = []
 
     static getAllFinancialData() {
         return this.financialData;
@@ -40,6 +16,60 @@ export class allFinancialData {
     }
 
     static updateFinancialData(data) {
+
+    }
+
+    static async httpsRequestGettingUserOperations(period) {
+        let result = await HttpUtils.requestWithAuth("GET", "/operations?period=" + period);
+        if (!result.error) {
+            this.financialData = [];
+            result.forEach((item) => {
+                let operation = {};
+                operation.id = item.id;
+                operation.type = (item.type === 'expense') ? 'расход' : 'доход';
+                operation.category = item.category;
+                operation.amount = item.amount;
+                operation.date = new Date(item.date);
+                operation.comments = item.comment;
+                operation.deleteButton = null;
+                operation.editButton = null;
+                this.financialData.push(operation);
+            })
+            this.financialData.sort((a, b) => a.id - b.id);
+            return true;
+        }
+        return false;
+
+    }
+
+    static getDiagramsData() {
+        if (this.financialData.length > 0) {
+            let expenseData = [];
+            let incomeData = [];
+            this.financialData.forEach(item => {
+                if (item.type === "расход") {
+                    expenseData.push(item);
+                } else {
+                    incomeData.push(item);
+                }
+            });
+            //console.log("expence data", expenseData);
+            //console.log("income data", incomeData);
+            return [this.getCategorySummaryValue(expenseData), this.getCategorySummaryValue(incomeData)];
+        }
+    }
+
+    static getCategorySummaryValue(operationsArray) {
+        let result = new Map();
+        operationsArray.forEach(item => {
+            let value = 0;
+            if (result.has(item.category)) {
+                value = result.get(item.category);
+
+            }
+            result.set(item.category, value + item.amount)
+        })
+        return result;
 
     }
 

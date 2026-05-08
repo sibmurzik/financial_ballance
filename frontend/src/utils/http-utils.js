@@ -1,44 +1,71 @@
 import config from "../config/config";
 
+
 export class HttpUtils {
-    static async request(method = 'GET', url, useAuth = true, body = null) {
+    static headers = {
+        'Accept': '*/*',
+        'Content-Type': 'application/json',
+    }
+
+    static async request(method = 'GET', url, body = null) {
         const params = {
-            method : method,
-            headers : {
-                'Accept': '*/*',
-                'Content-Type': 'application/json',
-            }
+            method: method,
+            headers: this.headers,
         }
-
-        if (useAuth) {
-            let token = this.getAccessToken();
-            if (token) {
-                params.headers['x-auth-token'] = token;
-            }
-
-
-
+        if (body) {
+            params.body = JSON.stringify(body);
         }
-        if(body) {
+        return fetch(config.api + url, params)
+            .then(response => response.json())
+            .catch(error => error);
+
+    }
+
+    static async requestWithAuth(method = 'GET', url, body = null) {
+        const token = this.getAccessToken();
+        const params = {
+            method: method,
+            headers: this.headers,
+        }
+        if (token) {
+            params.headers['x-auth-token'] = token;
+        }
+        if (body) {
             params.body = JSON.stringify(body);
         }
 
+        let result = null;
+        try {
+            let res = await fetch(config.api + url, params);
+            result = await res.json();
+            if (!res.ok) {
+                if (result.error && result.message === "jwt expired") {
+                    await this.refreshToken().then(token => {
+                        if (token.tokens.accessToken && token.tokens.refreshToken) {
+                            let token = this.getAccessToken();
+                            if (token) {
+                                params.headers['x-auth-token'] = token;
+                            }
+                            //console.log("params", params);
+                        }
+                    }).catch(error => console.log(error));
 
-        // 1234Dyma$
-
-        return  fetch(config.api + url, params)
-            .then(res => {
-                if (!res.ok) {
-                    //console.log(res.status);
+                    //console.log("12nd",  result);
+                    let res = await fetch(config.api + url, params);
+                    result = await res.json();
+                    //console.log("22nd",  result);
                 }
-                    return res.json()
-                })
-            .catch(err => err);
 
+            }
 
+        } catch (err) {
+            return err;
+        }
 
+        return result;
 
     }
+
 
     static checkAuthentification() {
         const user = JSON.parse(sessionStorage.getItem("lumicoinData"));
@@ -54,18 +81,32 @@ export class HttpUtils {
         return null;
     }
 
-    static async  refreshToken() {
-        const body = {
-            "refreshToken": JSON.parse(sessionStorage.getItem("lumicoinData")).refreshToken
-        }
+    static refreshToken() {
 
-        return this.request("POST", "/refresh", false, body).then(res => {
-            let userData = JSON.parse(sessionStorage.getItem("lumicoinData"));
-            userData.accessToken = res.tokens.accessToken;
-            userData.refreshToken = res.tokens.refreshToken;
-            sessionStorage.setItem("lumicoinData", JSON.stringify(userData));
-            return res.json();
 
-        }).catch(err => err);
+        return fetch(config.api + '/refresh', {
+            method: 'POST',
+            headers: this.headers,
+            body: JSON.stringify({
+                "refreshToken": JSON.parse(sessionStorage.getItem("lumicoinData")).refreshToken,
+            })
+        })
+            .then(response => {
+                if (response.ok) {
+                    return Promise.resolve(response.json());
+                }
+                return Promise.reject(response.json());
+            })
+            .then(data => {
+                //console.log("data", data);
+                let userData = JSON.parse(sessionStorage.getItem("lumicoinData"));
+                userData.accessToken = data.tokens.accessToken;
+                userData.refreshToken =data.tokens.refreshToken;
+                sessionStorage.setItem("lumicoinData", JSON.stringify(userData));
+                return data;
+            })
+            .catch(error => error);
     }
+
+
 }

@@ -3,6 +3,7 @@ import {HttpUtils} from "../utils/http-utils";
 export class sideMenu {
 
     constructor() {
+        this.sideBarInfoUpdated = false;
         this.mainPageButton = document.getElementById('mainPageButton');
         this.incomeAndExpensesButton = document.getElementById('incomeAndExpensesButton');
         this.categoryButton = document.getElementById('categoryButton');
@@ -98,9 +99,8 @@ export class sideMenu {
     }
 
     async updateUserBallance() {
-        let result = await HttpUtils.request("GET", "/balance", true);
-        if (result.error && result.message === "jwt expired") {}
-        else if(result.balance >= 0) {
+        let result = await HttpUtils.requestWithAuth("GET", "/balance");
+        if(result.balance >= 0) {
             this.totalBalance.innerText = result.balance + "$";
         }
     }
@@ -109,6 +109,14 @@ export class sideMenu {
         const userInfo = JSON.parse(sessionStorage.getItem("lumicoinData"));
         if (userInfo && userInfo.name && userInfo.lastName) {
             this.userName.innerText = userInfo.name + " " + userInfo.lastName;
+        }
+    }
+
+    async updateSideBarInfo() {
+        if (!this.sideBarInfoUpdated) {
+            await this.updateUserBallance();
+            this.updateUserName();
+            this.sideBarInfoUpdated = true;
         }
     }
 

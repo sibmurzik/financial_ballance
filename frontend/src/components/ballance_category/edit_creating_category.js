@@ -10,8 +10,8 @@ export class CategoryEditCreating {
 
         if (sideMenuInstance) {
             sideMenuInstance.paintActiveElement(categoryType.split('-')[1] + "Page");
-            sideMenuInstance.updateUserBallance().then();
-            sideMenuInstance.updateUserName();
+            sideMenuInstance.updateSideBarInfo().then();
+
         }
 
         this.backRoute = '/' + categoryType.split('-')[1];
@@ -22,7 +22,6 @@ export class CategoryEditCreating {
         this.processingFunctionType = "";
 
         this.confirmButton = document.getElementById("confirmEditCreating");
-
 
 
         switch (categoryType) {
@@ -64,8 +63,6 @@ export class CategoryEditCreating {
         });
 
 
-
-
         const inputField = document.getElementById("categoryInput");
 
         const urlParams = new URLSearchParams(window.location.search);
@@ -80,7 +77,6 @@ export class CategoryEditCreating {
                 validationFeedback: document.getElementById("categoryFeedback")
             }
         ]
-
 
 
     }

@@ -13,8 +13,8 @@ export class FinancialOperationCreateEdit {
 
         if (sideMenuInstance) {
             sideMenuInstance.paintActiveElement(operationType.split('-')[1] + "Page");
-            sideMenuInstance.updateUserBallance().then();
-            sideMenuInstance.updateUserName();
+            sideMenuInstance.updateSideBarInfo().then();
+
         }
         this.backRoute = '/financial';
         this.pageTitle = document.getElementById("editCreatingOperationTitle");

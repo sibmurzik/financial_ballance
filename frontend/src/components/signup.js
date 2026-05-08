@@ -54,7 +54,7 @@ export class Signup {
                 "passwordRepeat": this.formFields[4].inputFiled.value
             }
 
-            let result =  await HttpUtils.request("POST", "/signup", false, body);
+            let result =  await HttpUtils.request("POST", "/signup", body);
 
             //console.log("Result", result);
             if (result.user ) {

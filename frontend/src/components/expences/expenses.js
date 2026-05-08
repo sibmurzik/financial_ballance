@@ -15,8 +15,8 @@ export class Expenses extends Balances{
 
         if (sideMenuInstance) {
             sideMenuInstance.paintActiveElement("expensesPage");
-            sideMenuInstance.updateUserBallance().then();
-            sideMenuInstance.updateUserName();
+            sideMenuInstance.updateSideBarInfo().then();
+
         }
 
         this.addCategoryButton.addEventListener('click', e => {

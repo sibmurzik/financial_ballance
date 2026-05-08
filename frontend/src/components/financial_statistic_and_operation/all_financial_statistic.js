@@ -11,8 +11,8 @@ export class AllFinancialStatistic {
         }
         if (sideMenuInstance) {
             sideMenuInstance.paintActiveElement("financialPage");
-            sideMenuInstance.updateUserBallance().then();
-            sideMenuInstance.updateUserName();
+            sideMenuInstance.updateSideBarInfo().then();
+
         }
 
         this.financialTable = document.getElementById("financial_statistic_table");
