@@ -1,112 +1,27 @@
+import {HttpUtils} from "./http-utils";
+import {Incomes} from "../components/incomes/incomes";
+
 export class Categories {
     static  incomesCategories = [
-        {
-            id: 1,
-            title: 'Депозиты',
-            element: null,
-            editButton: null,
-            deleteButton: null,
 
-        },
-        {
-            id: 2,
-            title: 'Зарплата',
-            element: null,
-            editButton: null,
-            deleteButton: null,
-        },
-        {
-            id: 3,
-            title: 'Сбережения',
-            element: null,
-            editButton: null,
-            deleteButton: null,
-        },
-        {
-            id: 4,
-            title: 'Инвестиции',
-            element: null,
-            editButton: null,
-            deleteButton: null,
-        },
     ];
 
     static expensesCategories = [
-        {
-            id: 1,
-            title: 'Еда',
-            element: null,
-            editButton: null,
-            deleteButton: null,
-
-        },
-        {
-            id: 2,
-            title: 'Жильё',
-            element: null,
-            editButton: null,
-            deleteButton: null,
-        },
-        {
-            id: 3,
-            title: 'Здоровье',
-            element: null,
-            editButton: null,
-            deleteButton: null,
-        },
-        {
-            id: 4,
-            title: 'Кафе',
-            element: null,
-            editButton: null,
-            deleteButton: null,
-        },
-
-        {
-            id: 5,
-            title: 'Авто',
-            element: null,
-            editButton: null,
-            deleteButton: null,
-        },
-        {
-            id: 6,
-            title: 'Одежда',
-            element: null,
-            editButton: null,
-            deleteButton: null,
-        },
-        {
-            id: 7,
-            title: 'Развлечения',
-            element: null,
-            editButton: null,
-            deleteButton: null,
-        },
-        {
-            id: 8,
-            title: 'Счета',
-            element: null,
-            editButton: null,
-            deleteButton: null,
-        },
-        {
-            id: 9,
-            title: 'Спорт',
-            element: null,
-            editButton: null,
-            deleteButton: null,
-        },
-
 
     ];
 
-    static getIncomesCategories() {
+    static  getIncomesCategories() {
         return this.incomesCategories;
+
     }
 
     static getIncomesCategoriesTitles() {
         return this.incomesCategories.map(category => category.title);
+    }
+
+    static getIncomesCategoriesId (title) {
+        const cat = this.incomesCategories.find(category => category.title === title);
+        return cat ? cat.id : null;
     }
 
     static getExpensesCategories() {
@@ -115,5 +30,38 @@ export class Categories {
 
     static getExpensesCategoriesTitles() {
         return this.expensesCategories.map(category => category.title);
+    }
+
+    static getExpensesCategoriesId (title) {
+        const cat = this.expensesCategories.find(category => category.title === title);
+        return cat ? cat.id : null;
+    }
+
+    static async updateCategory(category) {
+        const result = await  HttpUtils.requestWithAuth("GET", "/categories/" + category);
+        let array = [];
+        if (result.error ) {
+            return false;
+        }
+        result.forEach((item) => {
+            let categoryObject = {};
+            categoryObject.id = item.id;
+            categoryObject.title = item.title;
+            categoryObject.element = null;
+            categoryObject.editButton = null;
+            categoryObject.deleteButton = null;
+            array.push(categoryObject);
+        });
+        if (category === "expense") {
+            this.expensesCategories= [];
+            this.expensesCategories = JSON.parse(JSON.stringify(array));
+        } else if (category === "income") {
+            this.incomesCategories =  [];
+            this.incomesCategories = JSON.parse(JSON.stringify(array));
+        }
+        //console.log(this.incomesCategories);
+        //console.log(this.expensesCategories);
+        return true;
+
     }
 }

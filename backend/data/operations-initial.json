@@ -68,5 +68,35 @@
     "amount": 6000,
     "date": "2022-04-03",
     "comment": "Стоматолог"
+  },
+  {
+    "id": 8,
+    "user_id": 1,
+    "category_expense_id": 3,
+    "category_income_id": null,
+    "type": "expense",
+    "amount": 4000,
+    "date": "2026-05-09",
+    "comment": "cat"
+  },
+  {
+    "id": 9,
+    "user_id": 1,
+    "category_expense_id": null,
+    "category_income_id": 3,
+    "type": "income",
+    "amount": 2000,
+    "date": "2026-05-05",
+    "comment": "cat"
+  },
+  {
+    "id": 10,
+    "user_id": 1,
+    "category_expense_id": null,
+    "category_income_id": 2,
+    "type": "income",
+    "amount": 3000,
+    "date": "2025-12-05",
+    "comment": "cats"
   }
 ]

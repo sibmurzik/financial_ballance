@@ -8,16 +8,17 @@
         <button type="button" class="period-select interval-btn btn btn-outline-secondary"  data-period='all'>Все</button>
 
         <div class="set-interval-section d-flex  p-0">
-
             <button type="button" class="period-select interval-btn btn btn-outline-secondary" data-period='interval'>Интервал</button>
             <div class="date-separation">с</div>
             <button type="button" class="date-set-btn btn btn-link me-3" id="dateFrom">Дата</button>
             <div class="date-separation" id="till">по</div>
             <button type="button" class="date-set-btn btn btn-link" id="dateTo">Дата</button>
         </div>
-
-
+        <div class="invalid-feedback ps-5 ms-5 pt-2 fw-normal text-center" id="intervalSelectionFeedback">
+            Выберите даты временного интервала до нажатия кнопки "Интервал"
+        </div>
     </section>
+
 
     <section class="chars" >
         <div class="chart">

@@ -1,9 +1,24 @@
+import {HttpUtils} from "../../utils/http-utils";
+import {Categories} from "../../utils/getAllCategories";
+
 export class Balances {
     constructor(openNewRoute) {
         this.openNewRoute = openNewRoute;
         this.listRoot = document.getElementById('categoryList');
         this.emptyCard = document.getElementById('emptyCard');
+
+        this.faultWindow = document.getElementById("faultWindow");
+        document.getElementById("faultConfirmButton").addEventListener("click", this.closeFaultWindow.bind(this) );
+
         this.deleteWindow = document.getElementById('deleteWindow');
+        document.getElementById("cancelDeleting").addEventListener("click", () => {
+            this.deleteWindow.style.display = "none";
+            document.body.style.background = "transparent";
+        });
+
+        document.getElementById("confirmDeleting").addEventListener("click", this.deleteHttpRequest.bind(this));
+        this.categoryData = null;
+
 
         this.ballanceCategoryTitle = document.getElementById('balanceCategoryTitle');
         this.addCategoryButton = document.getElementById('addCategoryButton');
@@ -11,11 +26,18 @@ export class Balances {
     }
 
     renderPage(categories, type) {
-        if (type==='incomes') {
+        if (type==='income') {
             this.ballanceCategoryTitle.innerText = "Доходы"
-        } else {
+        } else if (type==='expense') {
             this.ballanceCategoryTitle.innerText = "Расходы"
         }
+
+        //console.log("inside render", categories, type);
+
+        while (this.listRoot.childNodes.length > 2){
+            this.listRoot.removeChild(this.listRoot.childNodes[0]);
+        }
+
         categories.forEach((category) => {
             const cardTitle = document.createElement("h5");
             cardTitle.innerText = category.title;
@@ -34,7 +56,7 @@ export class Balances {
             deleteButton.href = "javascript:void(0)";
             deleteButton.classList.add("btn", "delete", "btn-danger");
             category.deleteButton = deleteButton;
-            deleteButton.addEventListener("click", this.deleteCategory.bind(this, category.id));
+            deleteButton.addEventListener("click", this.deleteCategory.bind(this, type, category.id));
             
             const cardBody = document.createElement("div");
             cardBody.classList.add("card-body");
@@ -56,26 +78,50 @@ export class Balances {
 
     }
 
-    deleteCategory(id) {
-        console.log("Delete", id);
+    deleteCategory(type,  id) {
+        this.categoryData = {
+            type: type,
+            id: id,
+        };
         this.deleteWindow.style.display = "block";
         document.body.style.background = "rgba(0, 0, 0, 0.45)";
-        document.getElementById("cancelDeleting").addEventListener("click", () => {
-            this.deleteWindow.style.display = "none";
-            document.body.style.background = "transparent";
-        });
-
-        document.getElementById("confirmDeleting").addEventListener("click", this.deleteHttpRequest.bind(this, id));
-
-
     }
 
 
 
-    deleteHttpRequest(id) {
+    async deleteHttpRequest() {
         this.deleteWindow.style.display = "none";
         document.body.style.background = "#fff";
-        console.log("Deleting request to server", id)
+        const id = this.categoryData.id;
+        const type = this.categoryData.type;
+        console.log("Deleting request to server", type, id)
+        if (id && type) {
+            const result = await  HttpUtils.requestWithAuth("DELETE", "/categories/" + type +"/" + id );
+            if (result.message === "Removed successfully") {
+                if (type ==="income") {
+                    await Categories.updateCategory("income")
+                    this.renderPage( Categories.getIncomesCategories(), type);
+                } else if (type ==="expense") {
+                    await Categories.updateCategory("expense")
+                    this.renderPage( Categories.getExpensesCategories(), type);
+                }
+
+            } else {
+                this.showFaultWindow();
+            }
+
+        }
+    }
+
+    showFaultWindow() {
+        this.faultWindow.style.display = "block";
+        document.body.style.background = "rgba(0, 0, 0, 0.45)";
+    }
+
+    closeFaultWindow() {
+        this.faultWindow.style.display = "none";
+        document.body.style.background = "transparent";
+
     }
 
 

@@ -59,7 +59,7 @@ export class HttpUtils {
             }
 
         } catch (err) {
-            return err;
+            return {error: err};
         }
 
         return result;

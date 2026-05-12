@@ -13,20 +13,23 @@
 
     </div>
 
-    <section class="interval-selector row  m-0 p-0 gy-3">
-        <button type="button" class="interval-btn btn btn-outline-secondary active" id="intToday">Сегодня</button>
-        <button type="button" class="interval-btn btn btn-outline-secondary" id="intWeek">Неделя</button>
-        <button type="button" class="interval-btn btn btn-outline-secondary" id="intMonth">Месяц</button>
-        <button type="button" class="interval-btn btn btn-outline-secondary" id="intYear">Год</button>
-        <button type="button" class="interval-btn btn btn-outline-secondary" id="intAll">Все</button>
+    <section class="interval-selector  row m-0 px-0 gy-3">
+        <button type="button" class="period-select interval-btn btn btn-outline-secondary active" data-period='today'>Сегодня</button>
+        <button type="button" class="period-select interval-btn btn btn-outline-secondary" data-period='week'>Неделя</button>
+        <button type="button" class="period-select interval-btn btn btn-outline-secondary" data-period='month'>Месяц</button>
+        <button type="button" class="period-select interval-btn btn btn-outline-secondary" data-period='year'>Год</button>
+        <button type="button" class="period-select interval-btn btn btn-outline-secondary"  data-period='all'>Все</button>
 
         <div class="set-interval-section d-flex  p-0">
 
-            <button type="button" class="interval-btn btn btn-outline-secondary" id="SetInterval">Интервал</button>
+            <button type="button" class="period-select interval-btn btn btn-outline-secondary" data-period='interval'>Интервал</button>
             <div class="date-separation">с</div>
-            <button type="button" class="date-set-btn btn btn-link me-3" id="fromDate">Дата</button>
+            <button type="button" class="date-set-btn btn btn-link me-3" id="dateFrom">Дата</button>
             <div class="date-separation" id="till">по</div>
-            <button type="button" class="date-set-btn btn btn-link" id="tillDate">Дата</button>
+            <button type="button" class="date-set-btn btn btn-link" id="dateTo">Дата</button>
+        </div>
+        <div class="invalid-feedback ps-5 ms-5 pt-2 fw-normal text-center" id="intervalSelectionFeedback">
+            Выберите даты временного интервала до нажатия кнопки "Интервал"
         </div>
 
 

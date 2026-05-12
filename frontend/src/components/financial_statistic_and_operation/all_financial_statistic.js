@@ -1,30 +1,39 @@
 import {allFinancialData} from "../../utils/getAllFinancialData";
 import {HttpUtils} from "../../utils/http-utils";
+import {TimeIntervalSelection} from "../intervalSelection";
+import {Login} from "../login";
 
 
-export class AllFinancialStatistic {
+export class AllFinancialStatistic  extends TimeIntervalSelection{
 
     constructor(sideMenuInstance, openNewRoute) {
-        this.openNewRoute = openNewRoute;
-        if (!HttpUtils.checkAuthentification()) {
-            this.openNewRoute("/login")
-        }
+        super(openNewRoute);
+
         if (sideMenuInstance) {
+            this.sideMenuInstance = sideMenuInstance;
             sideMenuInstance.paintActiveElement("financialPage");
             sideMenuInstance.updateSideBarInfo().then();
-
         }
 
+        this.faultWindow = document.getElementById("faultWindow");
+        document.getElementById("faultConfirmButton").addEventListener("click", this.closeFaultWindow.bind(this) );
+
         this.financialTable = document.getElementById("financial_statistic_table");
+
         this.deleteWindow = document.getElementById("deleteWindow");
+        this.confirmDeleteButton = document.getElementById("confirmDeleting");
+        document.getElementById("cancelDeleting").addEventListener("click", () => {
+            this.deleteWindow.style.display = "none";
+            document.body.style.background = "transparent";
+        });
+        this.confirmDeleteButton.addEventListener("click", this.deleteOperationHttpRequest.bind(this));
+        this.operationId = null;
+
+
         document.getElementById("incomeCreating").addEventListener("click", this.creatingNewFinanceOperation.bind(this, "income"));
         document.getElementById("expenseCreating").addEventListener("click", this.creatingNewFinanceOperation.bind(this, "expense"));
 
-
-
-
-        this.renderTable(allFinancialData.getAllFinancialData());
-
+        this.gettingUserOperation().then();
 
     }
 
@@ -104,22 +113,27 @@ export class AllFinancialStatistic {
 
     deleteOperation(id) {
         console.log("Delete operation", id);
+        this.operationId = id;
         this.deleteWindow.style.display = "block";
         document.body.style.background = "rgba(0, 0, 0, 0.45)";
-        document.getElementById("cancelDeleting").addEventListener("click", () => {
-            this.deleteWindow.style.display = "none";
-            document.body.style.background = "transparent";
-        });
-
-        document.getElementById("confirmDeleting").addEventListener("click", this.deleteOperationHttpRequest.bind(this, id));
-
-
     }
 
-    deleteOperationHttpRequest(id) {
+    async deleteOperationHttpRequest() {
         this.deleteWindow.style.display = "none";
         document.body.style.background = "#fff";
-        console.log("Deleting request to server", id)
+        const id = this.operationId;
+        //console.log("operationId", id );
+        if (id) {
+            const result = await  HttpUtils.requestWithAuth("DELETE", "/operations/" + id );
+            if (result.message === "Removed successfully") {
+                await this.gettingUserOperation();
+                await this.sideMenuInstance.updateUserBallance();
+            } else {
+                this.showFaultWindow();
+            }
+
+        }
+
     }
 
     creatingNewFinanceOperation(type) {
@@ -139,6 +153,36 @@ export class AllFinancialStatistic {
         } else if (type === "расход") {
             this.openNewRoute("/financial/edit/expense?id=" + id);
         }
+
+    }
+
+
+    async gettingUserOperation() {
+        const result = await allFinancialData.httpsRequestGettingUserOperations(this.getHttpPeriodParams())
+        if(result) {
+            this.financialTable.innerHTML='';
+            this.renderTable(allFinancialData.getAllFinancialData());
+        } else {
+            this.showFaultWindow();
+
+        }
+
+
+    }
+
+    intervalSelection(element) {
+        super.intervalSelection(element);
+        this.gettingUserOperation().then();
+    }
+
+    showFaultWindow() {
+        this.faultWindow.style.display = "block";
+        document.body.style.background = "rgba(0, 0, 0, 0.45)";
+    }
+
+    closeFaultWindow() {
+        this.faultWindow.style.display = "none";
+        document.body.style.background = "transparent";
 
     }
 

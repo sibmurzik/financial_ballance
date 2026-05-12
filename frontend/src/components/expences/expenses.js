@@ -10,9 +10,6 @@ export class Expenses extends Balances{
         }
 
 
-
-
-
         if (sideMenuInstance) {
             sideMenuInstance.paintActiveElement("expensesPage");
             sideMenuInstance.updateSideBarInfo().then();
@@ -23,9 +20,19 @@ export class Expenses extends Balances{
             openNewRoute("/expenses/create");
         })
 
-       this.renderPage(Categories.getExpensesCategories(), "expenses");
-        //console.log(this.incomesCategories);
+        this.init().then();
 
+
+    }
+
+    async init() {
+        const result = await Categories.updateCategory("expense")
+        if (result) {
+        this.renderPage( Categories.getExpensesCategories(), "expense");
+        }
+        else {
+            this.showFaultWindow();
+        }
 
     }
 
@@ -37,11 +44,6 @@ export class Expenses extends Balances{
         this.openNewRoute("expenses/edit?id="+ id+"&title="+title);
     }
 
-    deleteHttpRequest(id) {
-        this.deleteWindow.style.display = "none";
-        document.body.style.background = "#fff";
-        console.log("Deleting request to server", id)
-    }
 
 
 }

@@ -10,6 +10,16 @@ export class sideMenu {
         this.incomeButton = document.getElementById('incomeButton');
         this.spenceButton = document.getElementById('spenceButton');
         this.dropdownNavigationSection = document.getElementById('dropdownNavigationSection');
+        this.exitMenu = document.getElementById('exitMenu');
+        document.getElementById('exitButton').addEventListener("click", () => {
+            sessionStorage.clear();
+            window.location.assign('/login');
+
+        });
+        document.getElementById('closeLogout').addEventListener("click", () => {
+            this.exitMenu.style.display = 'none';
+        });
+
 
         this.totalBalance = document.getElementById('totalBalance');
         this.userName = document.getElementById('userName');
@@ -57,12 +67,16 @@ export class sideMenu {
             this.dropdownNavigationSection.classList.toggle('active');
         })
 
-        document.getElementById('logoutButton').addEventListener('click', (event)=> {
-            sessionStorage.clear();
-        })
+        document.getElementById('logoutButton').addEventListener('click',
+            (event)=> this.logoutMenu())
 
 
 
+
+    }
+
+    logoutMenu() {
+        this.exitMenu.style.display = "flex";
 
     }
 
@@ -100,7 +114,7 @@ export class sideMenu {
 
     async updateUserBallance() {
         let result = await HttpUtils.requestWithAuth("GET", "/balance");
-        if(result.balance >= 0) {
+        if(result.balance) {
             this.totalBalance.innerText = result.balance + "$";
         }
     }
@@ -119,6 +133,9 @@ export class sideMenu {
             this.sideBarInfoUpdated = true;
         }
     }
+
+
+
 
 
 }

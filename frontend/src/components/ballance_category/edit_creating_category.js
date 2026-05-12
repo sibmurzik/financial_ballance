@@ -1,5 +1,6 @@
 import {FormValidation} from "../../utils/formValidation";
 import {HttpUtils} from "../../utils/http-utils";
+import {Categories} from "../../utils/getAllCategories";
 
 export class CategoryEditCreating {
     constructor(sideMenuInstance, openNewRoute, categoryType) {
@@ -22,6 +23,9 @@ export class CategoryEditCreating {
         this.processingFunctionType = "";
 
         this.confirmButton = document.getElementById("confirmEditCreating");
+        this.faultWindow = document.getElementById("faultWindow");
+        this.categoryExist = false;
+        document.getElementById("faultConfirmButton").addEventListener("click", this.closeFaultWindow.bind(this) );
 
 
         switch (categoryType) {
@@ -72,6 +76,7 @@ export class CategoryEditCreating {
 
         this.formFields = [
             {
+                categoryId: id,
                 inputFiled: inputField,
                 inputType: "name",
                 validationFeedback: document.getElementById("categoryFeedback")
@@ -82,27 +87,55 @@ export class CategoryEditCreating {
     }
 
 
-    addCategoryHttpRequest() {
+    async addCategoryHttpRequest() {
 
         if (FormValidation.formFieldsValidation(this.formFields)) {
-            console.log(`Add ${this.processingFunctionType} category ${this.formFields[0].inputFiled.value} request to server`)
+            //console.log(`Add ${this.processingFunctionType} category ${this.formFields[0].inputFiled.value} request to server`);
+            const result = await HttpUtils.requestWithAuth("POST", "/categories/" + this.processingFunctionType, {"title": this.formFields[0].inputFiled.value});
+            if (result.error) {
+                if (result.message === "This record already exists") {
+                    this.categoryExist = true;
+                }
+                this.showFaultWindow();
+            }
+
             this.openNewRoute(this.backRoute);
 
-        } else {
-            console.log("Form is wrong");
+
         }
 
     }
 
-    editCategoryHttpRequest() {
+    async editCategoryHttpRequest() {
 
         if (FormValidation.formFieldsValidation(this.formFields)) {
             console.log(`Edit ${this.processingFunctionType} category ${this.formFields[0].inputFiled.value} request to server`)
+
+            const result = await HttpUtils.requestWithAuth("PUT", "/categories/" + this.processingFunctionType + "/" + this.formFields[0].categoryId,
+                {"title": this.formFields[0].inputFiled.value});
+
+            if (result.error) {
+                this.showFaultWindow();
+            }
+
             this.openNewRoute(this.backRoute);
 
-        } else {
-            console.log("Form is wrong");
         }
+
+    }
+
+    showFaultWindow() {
+        this.faultWindow.style.display = "block";
+        document.body.style.background = "rgba(0, 0, 0, 0.45)";
+        if (this.categoryExist) {
+            document.getElementById("faultMessage").innerText = "Данная категория уже существует";
+            this.categoryExist = false;
+        }
+    }
+
+    closeFaultWindow() {
+        this.faultWindow.style.display = "none";
+        document.body.style.background = "transparent";
 
     }
 

@@ -33,13 +33,13 @@
   }
 
   .set-interval-section {
-    width: 288px;
+    width: auto;
     @include adaptive.sm {
       width: auto;
     }
 
     .date-set-btn {
-      width: 62px;
+      width: auto;
       height: 37px;
       font-weight: 500;
       font-size: 16px;

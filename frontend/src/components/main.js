@@ -5,53 +5,30 @@ import {TimeIntervalSelection} from "./intervalSelection";
 
 export class Main extends TimeIntervalSelection{
     constructor(sideMenuInstance, openNewRoute) {
-        super(sideMenuInstance, openNewRoute);
+        super( openNewRoute);
+
+        if (sideMenuInstance) {
+            sideMenuInstance.paintActiveElement("mainPage");
+            sideMenuInstance.updateSideBarInfo().then();
+        }
 
 
         this.gettingUserOperation().then();
 
         this.incomesData = {
-            labels: [
-                'Red',
-                'Orange',
-
-
-            ],
+            labels: [],
             datasets: [{
-                data: [27, 40, 15, 15, 8],
-                backgroundColor: [
-                    'rgb(214,58,91)',
-                    'rgb(218,99,14)',
-                    'rgb(255,208,0)',
-                    'rgb(56,205,17)',
-                    'rgb(38,102,194)',
-
-                ],
+                data: [],
+                backgroundColor: [],
                 hoverOffset: 6,
-
             }]
         };
         this.spenceData = {
-            labels: [
-                'Red',
-                'Orange',
-                'Yellow',
-                'Green',
-                'Blue',
-
-            ],
+            labels: [],
             datasets: [{
-                data: [5, 10, 35, 35, 15],
-                backgroundColor: [
-                    'rgb(214,58,91)',
-                    'rgb(218,99,14)',
-                    'rgb(255,208,0)',
-                    'rgb(56,205,17)',
-                    'rgb(38,102,194)',
-
-                ],
+                data: [],
+                backgroundColor: [],
                 hoverOffset: 6,
-
             }]
         };
 
@@ -132,18 +109,22 @@ export class Main extends TimeIntervalSelection{
     }
 
 
-    handleLayoutChanges(e) {
+    handleLayoutChanges() {
         this.incomeChart.update();
         this.spenceChart.update();
 
     }
 
     async gettingUserOperation() {
-        if(await allFinancialData.httpsRequestGettingUserOperations("all")) {
+        if(await allFinancialData.httpsRequestGettingUserOperations(this.getHttpPeriodParams())) {
             const diagramsData = allFinancialData.getDiagramsData();
             //console.log("summary", diagramsData);
             this.updateDigram(diagramsData[0], this.spenceData);
             this.updateDigram(diagramsData[1], this.incomesData);
+            this.handleLayoutChanges.call(this);
+
+
+
         }
     }
 
@@ -151,6 +132,12 @@ export class Main extends TimeIntervalSelection{
         digramData.labels = [];
         digramData.datasets[0].data = [];
         digramData.datasets[0].backgroundColor = [];
+        if (dataMap.size === 0) {
+            digramData.labels.push("Нет данных за этот период");
+            digramData.datasets[0].data.push(100);
+            digramData.datasets[0].backgroundColor.push('rgb(240,240,240)');
+            return ;
+        }
 
         dataMap.forEach((value, key) => {
             digramData.labels.push(key);
@@ -169,6 +156,11 @@ export class Main extends TimeIntervalSelection{
         })
 
         localStorage.setItem('colorMap', JSON.stringify(Array.from(this.colorMap.entries())));
+    }
+
+     intervalSelection(element) {
+        super.intervalSelection(element);
+        this.gettingUserOperation().then();
     }
 
 }

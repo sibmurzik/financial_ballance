@@ -1,5 +1,4 @@
 import {FormValidation} from "../../utils/formValidation";
-import {Incomes} from "../incomes/incomes";
 import {Categories} from "../../utils/getAllCategories";
 import {allFinancialData} from "../../utils/getAllFinancialData";
 import {HttpUtils} from "../../utils/http-utils";
@@ -12,10 +11,16 @@ export class FinancialOperationCreateEdit {
         }
 
         if (sideMenuInstance) {
+            this.sideMenuInstance = sideMenuInstance;
             sideMenuInstance.paintActiveElement(operationType.split('-')[1] + "Page");
             sideMenuInstance.updateSideBarInfo().then();
 
         }
+
+
+        this.faultWindow = document.getElementById("faultWindow");
+        document.getElementById("faultConfirmButton").addEventListener("click", this.closeFaultWindow.bind(this) );
+
         this.backRoute = '/financial';
         this.pageTitle = document.getElementById("editCreatingOperationTitle");
         this.processingFunction = null;
@@ -38,7 +43,7 @@ export class FinancialOperationCreateEdit {
                 this.processingFunctionType = "income";
                 this.confirmButton.innerText = "Создать";
                 this.typeSelect.value = "income";
-                this.setCategoryOptions("income")
+                this.setCategoryOptions("income").then()
                 break;
             case 'edit-incomes':
                 this.pageTitle.innerText = "Редактирование дохода/расхода";
@@ -46,8 +51,7 @@ export class FinancialOperationCreateEdit {
                 this.processingFunctionType = "income";
                 this.confirmButton.innerText = "Сохранить";
                 this.typeSelect.value = "income";
-                this.setCategoryOptions("income");
-                this.fillingFormFields();
+                this.fillingFormFields().then();
                 break;
             case 'create-expenses':
                 this.pageTitle.innerText = "Создание дохода/расхода";
@@ -55,7 +59,7 @@ export class FinancialOperationCreateEdit {
                 this.processingFunctionType = "expense";
                 this.confirmButton.innerText = "Создать";
                 this.typeSelect.value = "expense";
-                this.setCategoryOptions("expense");
+                this.setCategoryOptions("expense").then();
                 break;
             case 'edit-expenses':
                 this.pageTitle.innerText = "Редактирование дохода/расхода";
@@ -63,8 +67,7 @@ export class FinancialOperationCreateEdit {
                 this.processingFunctionType = "expense";
                 this.confirmButton.innerText = "Сохранить";
                 this.typeSelect.value = "expense";
-                this.setCategoryOptions("expense");
-                this.fillingFormFields();
+                this.fillingFormFields().then();
                 break;
             default:
                 this.pageTitle.innerText = "Редактирование/создание  дохода/расхода";
@@ -82,7 +85,7 @@ export class FinancialOperationCreateEdit {
 
 
         this.typeSelect.addEventListener("change", (event) => {
-            this.setCategoryOptions(event.target.value);
+            this.setCategoryOptions(event.target.value).then();
         });
 
 
@@ -124,10 +127,11 @@ export class FinancialOperationCreateEdit {
 
         ];
 
-
     }
 
-    setCategoryOptions(type) {
+
+
+    async setCategoryOptions(type) {
         while (this.categorySelect.length > 1) {
             this.categorySelect.remove(this.categorySelect.length - 1);
 
@@ -135,8 +139,10 @@ export class FinancialOperationCreateEdit {
 
         let optionsList;
         if (type === "income") {
+            await Categories.updateCategory("income");
             optionsList = Categories.getIncomesCategoriesTitles();
         } else if (type === "expense") {
+            await Categories.updateCategory("expense");
             optionsList = Categories.getExpensesCategoriesTitles();
         } else {
             optionsList = [];
@@ -149,15 +155,21 @@ export class FinancialOperationCreateEdit {
 
     }
 
-    fillingFormFields() {
+    async fillingFormFields() {
         const urlParams = new URLSearchParams(window.location.search);
         const id =  parseInt(urlParams.get("id"));
         const operationData = allFinancialData.getFinancialDataById(id);
+        const type = operationData.type === "доход" ? "income" : "expense";
 
-        console.log("Selected category", operationData.category);
-        for (let i = 1; i < this.categorySelect.length; i++) {
-            this.categorySelect[i].selected = this.categorySelect[i].value.toLowerCase() === operationData.category.toLowerCase();
+        await this.setCategoryOptions(type);
+
+
+
+
+        for (const option of this.categorySelect.options) {
+            option.selected = option.value.toLowerCase() === operationData.category.toLowerCase();
         }
+
 
         this.amountInput.value = operationData.amount + "$";
         this.dateInput.value = operationData.date.toLocaleDateString("ru-RU");
@@ -166,27 +178,68 @@ export class FinancialOperationCreateEdit {
     }
 
 
-    addFinancialOperationHttpRequest() {
+    async  addFinancialOperationHttpRequest() {
 
         if (FormValidation.formFieldsValidation(this.formFields)) {
-            console.log(`Add ${this.processingFunctionType} operation  request to server`)
-            this.openNewRoute(this.backRoute);
 
-        } else {
-            console.log("Form is wrong");
+            const result = await HttpUtils.requestWithAuth("POST", "/operations", this.createRequestBody());
+            console.log("result", result);
+            this.openNewRoute(this.backRoute);
+            await this.sideMenuInstance.updateUserBallance();
+
+        }
+
+
+
+    }
+
+    async editFinancialOperationHttpRequest() {
+
+        if (FormValidation.formFieldsValidation(this.formFields)) {
+            const urlParams = new URLSearchParams(window.location.search);
+            const id = urlParams.get("id");
+            const result = await HttpUtils.requestWithAuth("PUT", "/operations/"+id , this.createRequestBody());
+            if (result.error) {
+                this.showFaultWindow()
+            }
+            this.openNewRoute(this.backRoute);
+            await this.sideMenuInstance.updateUserBallance();
+
         }
 
     }
 
-    editFinancialOperationHttpRequest() {
-
-        if (FormValidation.formFieldsValidation(this.formFields)) {
-            console.log(`Edit ${this.processingFunctionType} operation  request to server`)
-            this.openNewRoute(this.backRoute);
-
-        } else {
-            console.log("Form is wrong");
+    createRequestBody() {
+        const dateArray = this.dateInput.value.split(".");
+        const transformedDate = dateArray[2]+"-"+dateArray[1]+"-"+dateArray[0];
+        let catId = null;
+        if (this.typeSelect.value === "expense") {
+            catId = Categories.getExpensesCategoriesId(this.categorySelect.value);
+        } else if ( this.typeSelect.value === "income") {
+            catId =Categories.getIncomesCategoriesId(this.categorySelect.value);
         }
 
+        //console.log("category id ",catId);
+        return {
+            "type": this.typeSelect.value,
+            "amount": parseInt(this.amountInput.value),
+            "date": transformedDate,
+            "comment": this.commentInput.value,
+            "category_id": catId,
+        };
+
     }
+
+    showFaultWindow() {
+        this.faultWindow.style.display = "block";
+        document.body.style.background = "rgba(0, 0, 0, 0.45)";
+    }
+
+    closeFaultWindow() {
+        this.faultWindow.style.display = "none";
+        document.body.style.background = "transparent";
+
+    }
+
+
 }
