@@ -11,7 +11,6 @@ export class TimeIntervalSelection {
 
 
 
-
         this.timeInterval = "today";
 
         this.intervals = document.querySelectorAll(".period-select");

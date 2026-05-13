@@ -3,6 +3,11 @@
 @use "adaptive";
 
 
+.overlay {
+  display: none;
+  z-index: 10;
+  background: rgba(0, 0, 0, 0.45);
+}
 
 
 .modal-window {
@@ -16,7 +21,7 @@
   text-align: center;
   color: #290661;
   padding: 40px;
-  z-index: 6;
+  z-index: 30;
   @include adaptive.sm {
     font-size: 14px;
   }

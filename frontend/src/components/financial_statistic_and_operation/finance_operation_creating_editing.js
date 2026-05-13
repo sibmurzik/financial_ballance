@@ -2,6 +2,8 @@ import {FormValidation} from "../../utils/formValidation";
 import {Categories} from "../../utils/getAllCategories";
 import {allFinancialData} from "../../utils/getAllFinancialData";
 import {HttpUtils} from "../../utils/http-utils";
+import datepicker from "js-datepicker";
+
 
 export class FinancialOperationCreateEdit {
     constructor(sideMenuInstance, openNewRoute, operationType) {
@@ -25,6 +27,7 @@ export class FinancialOperationCreateEdit {
         this.pageTitle = document.getElementById("editCreatingOperationTitle");
         this.processingFunction = null;
         this.processingFunctionType = "";
+        this.overlay = document.getElementById('overlay');
 
         this.confirmButton = document.getElementById("confirmEditCreating");
         this.typeSelect = document.getElementById("typeSelect");
@@ -127,6 +130,27 @@ export class FinancialOperationCreateEdit {
 
         ];
 
+        this.date = null;
+
+        datepicker(this.dateInput, {
+            customMonths: ['Январь', 'Февраль', 'Март', 'Апрель', 'Май', 'Июнь', 'Июль', 'Август', 'Сентябрь', 'Октябрь', 'Ноябрь', 'Декабрь'],
+            customDays: ['Вс', 'Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб'],
+            onSelect: (instance, date) => {
+                const formatedDate = this.formatDate(date);
+                this.date = formatedDate[0];
+                this.dateInput.value = formatedDate[1];
+                //console.log(this.date);
+
+            }
+        });
+
+    }
+
+    formatDate( date ) {
+        const year = date.getFullYear();
+        const month = String(date.getMonth() + 1).padStart(2, '0');
+        const day = String(date.getDate()).padStart(2, '0');
+        return [`${year}-${month}-${day}`, `${day}.${month}.${year}`];
     }
 
 
@@ -210,8 +234,7 @@ export class FinancialOperationCreateEdit {
     }
 
     createRequestBody() {
-        const dateArray = this.dateInput.value.split(".");
-        const transformedDate = dateArray[2]+"-"+dateArray[1]+"-"+dateArray[0];
+
         let catId = null;
         if (this.typeSelect.value === "expense") {
             catId = Categories.getExpensesCategoriesId(this.categorySelect.value);
@@ -223,7 +246,7 @@ export class FinancialOperationCreateEdit {
         return {
             "type": this.typeSelect.value,
             "amount": parseInt(this.amountInput.value),
-            "date": transformedDate,
+            "date":this.date,
             "comment": this.commentInput.value,
             "category_id": catId,
         };
@@ -232,12 +255,12 @@ export class FinancialOperationCreateEdit {
 
     showFaultWindow() {
         this.faultWindow.style.display = "block";
-        document.body.style.background = "rgba(0, 0, 0, 0.45)";
+        this.overlay.style.display = "block";
     }
 
     closeFaultWindow() {
         this.faultWindow.style.display = "none";
-        document.body.style.background = "transparent";
+        this.overlay.style.display = "none";
 
     }
 

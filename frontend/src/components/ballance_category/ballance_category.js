@@ -11,9 +11,10 @@ export class Balances {
         document.getElementById("faultConfirmButton").addEventListener("click", this.closeFaultWindow.bind(this) );
 
         this.deleteWindow = document.getElementById('deleteWindow');
+        this.overlay = document.getElementById('overlay');
         document.getElementById("cancelDeleting").addEventListener("click", () => {
             this.deleteWindow.style.display = "none";
-            document.body.style.background = "transparent";
+            this.overlay.style.display = "none";
         });
 
         document.getElementById("confirmDeleting").addEventListener("click", this.deleteHttpRequest.bind(this));
@@ -83,15 +84,16 @@ export class Balances {
             type: type,
             id: id,
         };
+        this.overlay.style.display = "block";
         this.deleteWindow.style.display = "block";
-        document.body.style.background = "rgba(0, 0, 0, 0.45)";
+
     }
 
 
 
     async deleteHttpRequest() {
         this.deleteWindow.style.display = "none";
-        document.body.style.background = "#fff";
+        this.overlay.style.display = "none";
         const id = this.categoryData.id;
         const type = this.categoryData.type;
         console.log("Deleting request to server", type, id)
@@ -115,12 +117,12 @@ export class Balances {
 
     showFaultWindow() {
         this.faultWindow.style.display = "block";
-        document.body.style.background = "rgba(0, 0, 0, 0.45)";
+        this.overlay.style.display = "block";
     }
 
     closeFaultWindow() {
         this.faultWindow.style.display = "none";
-        document.body.style.background = "transparent";
+        this.overlay.style.display = "none";
 
     }
 

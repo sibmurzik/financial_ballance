@@ -15,6 +15,8 @@ export class AllFinancialStatistic  extends TimeIntervalSelection{
             sideMenuInstance.updateSideBarInfo().then();
         }
 
+        this.overlay = document.getElementById('overlay');
+
         this.faultWindow = document.getElementById("faultWindow");
         document.getElementById("faultConfirmButton").addEventListener("click", this.closeFaultWindow.bind(this) );
 
@@ -24,7 +26,7 @@ export class AllFinancialStatistic  extends TimeIntervalSelection{
         this.confirmDeleteButton = document.getElementById("confirmDeleting");
         document.getElementById("cancelDeleting").addEventListener("click", () => {
             this.deleteWindow.style.display = "none";
-            document.body.style.background = "transparent";
+            this.overlay.style.display = "none";
         });
         this.confirmDeleteButton.addEventListener("click", this.deleteOperationHttpRequest.bind(this));
         this.operationId = null;
@@ -115,12 +117,12 @@ export class AllFinancialStatistic  extends TimeIntervalSelection{
         console.log("Delete operation", id);
         this.operationId = id;
         this.deleteWindow.style.display = "block";
-        document.body.style.background = "rgba(0, 0, 0, 0.45)";
+        this.overlay.style.display = "block";
     }
 
     async deleteOperationHttpRequest() {
         this.deleteWindow.style.display = "none";
-        document.body.style.background = "#fff";
+        this.overlay.style.display = "none";
         const id = this.operationId;
         //console.log("operationId", id );
         if (id) {
@@ -177,12 +179,12 @@ export class AllFinancialStatistic  extends TimeIntervalSelection{
 
     showFaultWindow() {
         this.faultWindow.style.display = "block";
-        document.body.style.background = "rgba(0, 0, 0, 0.45)";
+        this.overlay.style.display = "block";
     }
 
     closeFaultWindow() {
         this.faultWindow.style.display = "none";
-        document.body.style.background = "transparent";
+        this.overlay.style.display = "none";
 
     }
 

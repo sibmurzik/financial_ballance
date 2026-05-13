@@ -16,6 +16,7 @@ export class CategoryEditCreating {
         }
 
         this.backRoute = '/' + categoryType.split('-')[1];
+        this.overlay = document.getElementById('overlay');
 
 
         this.pageTitle = document.getElementById("editCreatingCategoryTitle");
@@ -126,7 +127,7 @@ export class CategoryEditCreating {
 
     showFaultWindow() {
         this.faultWindow.style.display = "block";
-        document.body.style.background = "rgba(0, 0, 0, 0.45)";
+        this.overlay.style.display = "block";
         if (this.categoryExist) {
             document.getElementById("faultMessage").innerText = "Данная категория уже существует";
             this.categoryExist = false;
@@ -135,7 +136,7 @@ export class CategoryEditCreating {
 
     closeFaultWindow() {
         this.faultWindow.style.display = "none";
-        document.body.style.background = "transparent";
+        this.overlay.style.display = "none";
 
     }
 
