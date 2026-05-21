@@ -196,6 +196,7 @@ export class FinancialOperationCreateEdit {
 
 
         this.amountInput.value = operationData.amount + "$";
+        this.date = this.formatDate(operationData.date)[0];
         this.dateInput.value = operationData.date.toLocaleDateString("ru-RU");
         this.commentInput.value = operationData.comments;
 
