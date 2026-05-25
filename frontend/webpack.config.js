@@ -5,11 +5,13 @@ const CopyPlugin = require("copy-webpack-plugin");
 
 
 module.exports = {
-    entry: "./src/app.js",
+    entry: "./src/app.ts",
     mode: "development",
+    devtool: "inline-source-map",
     output: {
-        filename: "app.js",
+        filename: "main.js",
         path: path.resolve(__dirname, "dist"),
+        clean: true,
         publicPath: "/",
     },
     devServer: {
@@ -34,7 +36,17 @@ module.exports = {
 
                 ],
             },
+            {
+                test: /\.ts$/,
+                use: 'ts-loader',
+                exclude: /node_modules/,
+            }
+
         ],
+    },
+
+    resolve: {
+        extensions: [".ts", ".tsx", ".js", ".scss"],
     },
 
 
