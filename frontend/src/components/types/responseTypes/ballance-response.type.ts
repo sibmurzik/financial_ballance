@@ -1,3 +1,3 @@
 export type BalanceResponseType = {
-    balance: string;
+    balance: number;
 }

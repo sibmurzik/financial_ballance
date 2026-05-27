@@ -1,7 +1,7 @@
 import {FormValidation} from "../utils/formValidation";
 import {HttpUtils} from "../utils/http-utils";
 import {Login} from "./login";
-import type {DataForValidationType} from "./types/DataForValidation.type";
+import type {DataForValidationType} from "./types/data-for-validation.type";
 import type {SignupBodyType} from "./types/requestBodies/signup-body.type";
 import type {ErrorResponseType} from "./types/error-response.type";
 import type {SignedUpResponseType} from "./types/responseTypes/signed-up-response.type";

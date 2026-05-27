@@ -1,7 +1,7 @@
 import {HttpUtils} from "../utils/http-utils";
 import type {BalanceResponseType} from "./types/responseTypes/ballance-response.type";
 import type {ErrorResponseType} from "./types/error-response.type";
-import type {UserDataType} from "./types/UserData.type";
+import type {UserDataType} from "./types/user-data.type";
 
 export class sideMenu {
     private sideBarInfoUpdated: boolean;
@@ -173,8 +173,8 @@ export class sideMenu {
 
     public async updateUserBallance():Promise<void> {
         let result: BalanceResponseType | ErrorResponseType = await HttpUtils.requestWithAuth("GET", "/balance");
-            if ((result as BalanceResponseType).balance && this.totalBalance) {
-                this.totalBalance.innerText = (result as BalanceResponseType).balance + "$";
+            if ((result as BalanceResponseType).balance >= 0 && this.totalBalance ) {
+                this.totalBalance.innerText = (result as BalanceResponseType).balance + " $";
             } else {
                 console.error((result as ErrorResponseType).error);
             }

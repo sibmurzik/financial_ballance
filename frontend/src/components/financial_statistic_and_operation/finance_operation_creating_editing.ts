@@ -4,7 +4,7 @@ import {allFinancialData} from "../../utils/getAllFinancialData";
 import {HttpUtils} from "../../utils/http-utils";
 import datepicker, {type DatepickerInstance} from "js-datepicker";
 import type {sideMenu} from "../sideMenu";
-import type {DataForValidationType} from "../types/DataForValidation.type";
+import type {DataForValidationType} from "../types/data-for-validation.type";
 import type {FinancialOperationType} from "../types/financial-operation.type";
 import type {FinancialOperationBodyType} from "../types/requestBodies/financial-operation-body.type";
 import type {GetOperationResponseType} from "../types/responseTypes/get-operation-response.type";

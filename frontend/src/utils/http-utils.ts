@@ -1,25 +1,29 @@
 import config from "../config/config";
 import type {SignupBodyType} from "../components/types/requestBodies/signup-body.type";
-import type {LoginBodyType} from "../components/types/requestBodies/logn-body.type";
+import type {LoginBodyType} from "../components/types/requestBodies/login-body.type";
 import type {FinancialOperationBodyType} from "../components/types/requestBodies/financial-operation-body.type";
 import type {CategoryBodyType} from "../components/types/requestBodies/category-body.type";
 
 
 export class HttpUtils {
-    private static headers: any = {
-        'Accept': '*/*',
-        'Content-Type': 'application/json',
-    }
+
 
     public static async request(method = 'GET', url: string, body: SignupBodyType | LoginBodyType| null) : Promise<any> {
+          const  headers: any= {
+            'Accept': '*/*',
+            'Content-Type': 'application/json',
+          }
+
+
+
         let params:{} = {
             method: method,
-            headers: this.headers,
+            headers: headers,
         }
         if (body) {
             params = {
                 method: method,
-                headers: this.headers,
+                headers: headers,
                 body : JSON.stringify(body)
             }
 
@@ -32,51 +36,55 @@ export class HttpUtils {
 
     public static async requestWithAuth(method = 'GET', url: string, body:FinancialOperationBodyType| CategoryBodyType|null = null):Promise<any> {
         const token = this.getAccessToken();
-        let params:{} = {
-            method: method,
-            headers: this.headers,
-        }
+        let headers: {} = {}
+
         if (token) {
-            this.headers = {
+              headers = {
                 'Accept': '*/*',
                 'Content-Type': 'application/json',
                 'x-auth-token' : token,
+              }
+        } else {
+            headers = {
+                'Accept': '*/*',
+                'Content-Type': 'application/json',
             }
-
         }
+        let params:{} = {};
         if (body) {
             params = {
                 method: method,
-                headers: this.headers,
+                headers: headers,
                 body : JSON.stringify(body)
             }
 
+        } else {
+            params = {
+                method: method,
+                headers: headers,
+            }
         }
+
 
         let result: any = null;
         try {
             let res:Response = await fetch(config.api + url, params);
+            console.log("initial response", params);
             result = await res.json();
+            console.log("initial response", result);
             if (!res.ok) {
                 if (result.error && result.message === "jwt expired") {
-                    await this.refreshToken().then(token => {
-                        if (token.tokens.accessToken && token.tokens.refreshToken) {
-                            let token = this.getAccessToken();
-                            if (token) {
-                                this.headers = {
-                                    'Accept': '*/*',
-                                    'Content-Type': 'application/json',
-                                    'x-auth-token' : token,
-                                }
-                            }
-                            //console.log("params", params);
-                        }
-                    }).catch(error => console.log(error));
+                    try {
+                   result = await this.repeatRequest(method, url, body);
+                   console.log("repeat result", result);
+                   if (result.error && result.message === "jwt expired") {
+                       return result
+                   }
+                    }
+                    catch (err) {
+                        return {error: err};
+                    }
 
-                    //console.log("12nd",  result);
-                    let res: Response = await fetch(config.api + url, params);
-                    result = await res.json();
-                    //console.log("22nd",  result);
                 }
 
             }
@@ -85,7 +93,15 @@ export class HttpUtils {
             return {error: err};
         }
 
+        console.log(" result", result);
+
         return result;
+
+    }
+
+    private static async repeatRequest(method = 'GET', url: string, body:FinancialOperationBodyType| CategoryBodyType|null = null): Promise<any> {
+        await this.refreshToken();
+        return this.requestWithAuth(method, url, body);
 
     }
 
@@ -101,7 +117,7 @@ export class HttpUtils {
 
     }
 
-    public static getAccessToken():string| null {
+    private static   getAccessToken():string| null {
         const lumicoinData: string| null = sessionStorage.getItem("lumicoinData");
         let userInfo:any = null;
         if (lumicoinData) {
@@ -114,14 +130,18 @@ export class HttpUtils {
         return null;
     }
 
-    public static refreshToken() :Promise<any> {
+    public  static async refreshToken() :Promise<any> {
+        const header :{} = {
+            'Accept': '*/*',
+            'Content-Type': 'application/json',
+        }
         let lumicoinData: string| null = sessionStorage.getItem("lumicoinData");
         if (!lumicoinData) { lumicoinData= "" }
 
 
         return fetch(config.api + '/refresh', {
             method: 'POST',
-            headers: this.headers,
+            headers :header,
             body: JSON.stringify({
                 "refreshToken": JSON.parse(lumicoinData as string).refreshToken,
             })
